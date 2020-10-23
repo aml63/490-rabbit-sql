@@ -3,7 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('login.php.inc');
+require_once('auth.php.inc');
 
 function doLogin($username,$password)
 {
@@ -13,6 +13,14 @@ function doLogin($username,$password)
     return $login->validateLogin($username,$password);
     //return false if not valid
 }
+
+
+function doRegister($username,$password)
+{
+	$register = new loginDB();
+	return $register->newRegister($username,$password);
+}
+
 
 function requestProcessor($request)
 {
@@ -26,6 +34,8 @@ function requestProcessor($request)
   {
     case "login":
       return doLogin($request['username'],$request['password']);
+    case "register":
+      return doRegister($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }
