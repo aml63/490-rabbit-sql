@@ -40,16 +40,19 @@ class loginDB
 
 	public function newRegister($username,$password)
 	{
-		if ($this->validateLogin($username,$password))
+		$un = $this->logindb->real_escape_string($username);
+		$pw = $this->logindb->real_escape_string($password);
+	
+		$statement = "select * from users where screenname = '$un'";
+		$response = $this->logindb->query($statement);
+	
+		if ($response)
 		{
 			echo "User already found in database! Registration prevented.";
 			return 0; // user already exists
 		}
 		else
-		{
-			$un = $this->logindb->real_escape_string($username);
-			$pw = $this->logindb->real_escape_string($password);
-			
+		{			
 			$statement = "INSERT INTO users (screenname, password) VALUES('$username', '$password')";
 			$response = $this->logindb->query($statement);
 			
