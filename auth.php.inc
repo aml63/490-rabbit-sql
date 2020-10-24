@@ -57,5 +57,26 @@ class loginDB
 		}
 	}
 
+	public function newBio($username,$newbio)
+	{
+		$un = $this->logindb->real_escape_string($username);
+		$nb = $this->logindb->real_escape_string($newbio);
+		
+		$statement = "UPDATE users SET bio='$newbio' where screenname='$username'";
+		$response = $this->logindb->query($statement);
+		
+		return 1; // bio set
+	}
+	
+	public function fetchBio($username)
+	{
+		$un = $this->logindb->real_escape_string($username);
+		
+		$statement = "SELECT bio FROM users WHERE screenname='$username'";
+		$response = $this->logindb->query($statement);
+				
+		
+		return $response->fetch_assoc(); // return bio for user
+	}
 }
 ?>

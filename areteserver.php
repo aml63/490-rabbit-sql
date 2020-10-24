@@ -21,6 +21,17 @@ function doRegister($username,$password)
 	return $register->newRegister($username,$password);
 }
 
+function setBio($username,$newbio)
+{
+	$bio = new loginDB();
+	return $bio->newBio($username,$newbio);
+}
+
+function getBio($username)
+{
+	$bio = new loginDB();
+	return $bio->fetchBio($username);
+}
 
 function requestProcessor($request)
 {
@@ -36,6 +47,10 @@ function requestProcessor($request)
       return doLogin($request['username'],$request['password']);
     case "register":
       return doRegister($request['username'],$request['password']);
+    case "setbio":
+      return setBio($request['username'],$request['newBio']);
+    case "getbio":
+      return getBio($request['username']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }
