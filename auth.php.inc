@@ -46,7 +46,7 @@ class loginDB
 		$statement = "select * from users where screenname = '$un'";
 		$response = $this->logindb->query($statement);
 	
-		if ($response)
+		if ($response->fetch_assoc())
 		{
 			echo "User already found in database! Registration prevented.";
 			return 0; // user already exists
