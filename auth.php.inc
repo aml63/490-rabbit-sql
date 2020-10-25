@@ -60,25 +60,33 @@ class loginDB
 		}
 	}
 
-	public function newBio($username,$newbio)
+	public function pushInfo($username,$newinfo,$type)
 	{
 		$un = $this->logindb->real_escape_string($username);
-		$nb = $this->logindb->real_escape_string($newbio);
+		$in = $this->logindb->real_escape_string($newinfo);
 		
-		$statement = "UPDATE users SET bio='$newbio' where screenname='$username'";
+		// determine statement
+		if ($type == "setbio")
+			$statement = "UPDATE users SET bio='$in' where screenname='$username'";
+		if ($type == "setcabinet")
+			$statement = "UPDATE users SET cabinet='$in' where screenname='$username'";
+			
 		$response = $this->logindb->query($statement);
 		
-		return 1; // bio set
+		return 1; // info set
 	}
 	
-	public function fetchBio($username)
+	public function fetchInfo($username,$type)
 	{
 		$un = $this->logindb->real_escape_string($username);
 		
-		$statement = "SELECT bio FROM users WHERE screenname='$username'";
+		if ($type=="getbio")
+			$statement = "SELECT bio FROM users WHERE screenname='$username'";
+		else if ($type=="getcabinet")
+			$statement = "SELECT cabinet FROM users WHERE screenname='$username'";
+		
 		$response = $this->logindb->query($statement);
 				
-		
 		return $response->fetch_assoc(); // return bio for user
 	}
 }
