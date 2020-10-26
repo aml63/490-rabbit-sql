@@ -63,6 +63,8 @@ function requestProcessor($request)
       return getInfo($request['username'],$request['type']);
     case "addlike":
       return setInfo($request['username'],$request['addLike'],$request['type']);
+    case "getlikes":
+      return getInfo($request['username'],$request['type']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }
