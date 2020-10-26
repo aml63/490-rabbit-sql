@@ -5,7 +5,10 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require_once('auth.php.inc');
 
-function doLogin($username,$password)
+// Helper functions -> auth.php.inc
+
+// Check user credentials against the database
+function doLogin($username,$password) 
 {
     // lookup username in databas
     // check password
@@ -14,26 +17,29 @@ function doLogin($username,$password)
     //return false if not valid
 }
 
-
-function doRegister($username,$password)
+// Put a new user in the database
+function doRegister($username,$password) 
 {
 	$register = new loginDB();
 	return $register->newRegister($username,$password);
 }
 
-function setInfo($username,$newinfo,$type)
+// Set some info for a user
+function setInfo($username,$newinfo,$type) 
 {
 	$set = new loginDB();
 	return $set->pushInfo($username,$newinfo,$type);
 }
 
-function getInfo($username,$type)
+// Get some info for a user
+function getInfo($username,$type) 
 {
 	$get = new loginDB();
 	return $get->fetchInfo($username,$type);
 }
 
-function requestProcessor($request)
+// Determine what functions are used to handle a request
+function requestProcessor($request) 
 {
   echo "received request".PHP_EOL;
   var_dump($request);
@@ -55,15 +61,17 @@ function requestProcessor($request)
       return setInfo($request['username'],$request['newCabinet'],$request['type']);
     case "getcabinet":
       return getInfo($request['username'],$request['type']);
+    case "addlike":
+      return setInfo($request['username'],$request['addLike'],$request['type']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+$server = new rabbitMQServer("testRabbitMQ.ini","testServer"); // Construct a new server/listening when executing this code
 
-$server->process_requests('requestProcessor');
+$server->process_requests('requestProcessor');	// Designate the function that handles received requests
 exit();
 ?>
 
