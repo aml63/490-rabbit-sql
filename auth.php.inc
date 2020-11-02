@@ -15,6 +15,7 @@ class loginDB
 	{	
 		// Connect to database host
 		$this->logindb = new mysqli("127.0.0.1","testuser","12345","login");
+		$this->likesdb = new mysqli("127.0.0.1","testuser","12345","likes");
 
 		if ($this->logindb->connect_errno != 0)
 		{
@@ -82,15 +83,34 @@ class loginDB
 			$statement = "UPDATE users SET cabinet='$in' where screenname='$username'";
 		if ($type == "addlike")
 		{
-			//TODO: Keep track of liked
+			// Add drink to user's likes
+			echo "adding drink to user likes...".PHP_EOL;
 			$getinfo = $this->logindb->query("SELECT likes FROM users WHERE screenname='$username'");			
 			$oldinfo = $getinfo->fetch_assoc()["likes"];
 			if (strpos($oldinfo, $newinfo))
+			{
+				echo "drink already found in user favorites! stopping".PHP_EOL;
 				return 0; // Already in there
+			}
 			else if($oldinfo === NULL)
 				$statement = "UPDATE users SET likes='$newinfo' WHERE screenname='$username'";
 			else 
 				$statement = "UPDATE users SET likes=CONCAT('$oldinfo',',','$newinfo') WHERE screenname='$username'";
+		
+			// Increment drink's "likes"
+			echo "adding like to drink likes".PHP_EOL;
+			$likedrink = $this->likesdb->query("SELECT likes FROM drinks WHERE id='$newinfo'");
+			$ld = $likedrink->fetch_assoc()["likes"];
+			if ($ld == NULL)
+			{
+				echo "drink not found, inserting".PHP_EOL;
+				$this->likesdb->query("INSERT INTO drinks (id, likes) VALUES('$newinfo', 1)");
+			}
+			else
+			{
+				echo "drink found, added like".PHP_EOL;
+				$this->likesdb->query("UPDATE drinks SET likes = likes + 1");
+			}	
 		}	
 		
 		
@@ -105,15 +125,27 @@ class loginDB
 		$un = $this->logindb->real_escape_string($username);
 		
 		if ($type=="getbio")
-			$statement = "SELECT bio FROM users WHERE screenname='$username'";
+		{
+			$response = $this->logindb->query("SELECT bio FROM users WHERE screenname='$username'");
+			$response = $response->fetch_assoc();
+		}
 		else if ($type=="getcabinet")
-			$statement = "SELECT cabinet FROM users WHERE screenname='$username'";
+		{
+			$response = $this->logindb->query("SELECT cabinet FROM users WHERE screenname='$username'");
+			$response = $response->fetch_assoc();
+		}
 		else if ($type=="getlikes")
-			$statement = "SELECT likes FROM users WHERE screenname='$username'";
+		{
+			$response = $this->logindb->query("SELECT likes FROM users WHERE screenname='$username'");
+			$response = $response->fetch_assoc();
+		}
+		else if ($type == "getlikestats")
+		{
+			$response = $this->likesdb->query("SELECT * from drinks");
+			$response = $response->fetch_all(MYSQLI_ASSOC);
+		}
 		
-		$response = $this->logindb->query($statement);
-				
-		return $response->fetch_assoc(); // return bio for user
+		return $response;
 	}
 }
 ?>
