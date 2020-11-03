@@ -81,6 +81,8 @@ class loginDB
 			$statement = "UPDATE users SET bio='$in' where screenname='$username'";
 		if ($type == "setcabinet")
 			$statement = "UPDATE users SET cabinet='$in' where screenname='$username'";
+		if ($type == "setcomm")
+			$statement = "UPDATE users SET comm='$in' where screenname='$username'";
 		if ($type == "addlike")
 		{
 			// Add drink to user's likes
@@ -144,7 +146,12 @@ class loginDB
 			$response = $this->likesdb->query("SELECT * from drinks");
 			$response = $response->fetch_all(MYSQLI_ASSOC);
 		}
-		
+		else if ($type=="getcomm")
+		{
+			$response = $this->logindb->query("SELECT comm FROM users WHERE screenname='$username'");
+			$response = $response->fetch_assoc();
+		}
+
 		return $response;
 	}
 }
