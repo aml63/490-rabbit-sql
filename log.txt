@@ -1,1 +1,11 @@
-2020-11-02 | 09:44:32pm | It works!
+2020-11-03 | 08:33:11am | succesful login attempt by: test
+2020-11-03 | 08:35:09am | Login attempt by: test
+2020-11-03 | 08:35:09am | succesful login by: test
+2020-11-03 | 08:37:46am | login attempt by: zook
+2020-11-03 | 08:37:46am | failed login by: zook
+2020-11-03 | 08:37:53am | registration attempt by: zook
+2020-11-03 | 08:37:53am | succesful registration by: zook
+2020-11-03 | 08:37:56am | login attempt by: zook
+2020-11-03 | 08:37:56am | succesful login by: zook
+2020-11-03 | 08:39:07am | API Request: https://www.thecocktaildb.com/api/json/v2/9973533/random.php
+2020-11-03 | 08:39:21am | API Request: https://www.thecocktaildb.com/api/json/v2/9973533/filter.php?i=rum,vodka,gin
